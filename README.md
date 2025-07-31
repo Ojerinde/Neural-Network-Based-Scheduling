@@ -1,144 +1,126 @@
 # Neural Network-Based Scheduling for 6G Multi-User Network
 
-This project implements a neural network-based scheduling algorithm for a 6G multi-user network, optimizing resource allocation for improved throughput and energy efficiency. The system simulates a multi-user environment with Rayleigh fading channels and compares a neural network scheduler against a baseline Round-Robin scheduler. The project leverages MATLAB for simulation, training, and performance evaluation, focusing on key 6G network challenges such as dynamic channel conditions and resource constraints [1], [2].
+## Project Overview
+
+This project presents a neural network-based scheduler for multi-user 6G networks. It simulates a realistic Rayleigh fading environment and compares the performance of a trained neural network scheduler against a standard Round-Robin baseline. Implemented in MATLAB, the system aims to optimize throughput and energy efficiency—key priorities for next-generation wireless communication.
 
 ## Research Context
 
-Next-generation 6G networks demand efficient scheduling to maximize throughput and minimize energy consumption under dynamic channel conditions [1]. This project employs a neural network to learn optimal user scheduling based on channel gains, outperforming traditional Round-Robin scheduling [2]. The simulation incorporates realistic Rayleigh fading channels [3] and evaluates performance metrics like throughput gain and variance, aligning with 6G research goals for intelligent resource allocation [4].
+With the anticipated demands of 6G systems—including dense user connectivity, high throughput, and energy efficiency—effective user scheduling is a core challenge. Traditional schedulers like Round-Robin do not account for fluctuating channel conditions, often leading to suboptimal performance. In contrast, machine learning-based schedulers can learn adaptive strategies from channel data, offering performance gains in dynamic environments.
 
 ## Features
 
-- **Neural Network Scheduler**: Trained to optimize user scheduling based on channel gains.
-- **Round-Robin Baseline**: Implements a fair, non-adaptive scheduling algorithm for comparison.
-- **Rayleigh Fading Channels**: Simulates realistic wireless channel conditions [3].
-- **Performance Metrics**: Computes throughput gain, average throughput, and throughput variance.
-- **Visualization**: Plots throughput and energy consumption for both schedulers.
-- **Reproducible Results**: Uses a fixed random seed for consistent simulations.
+- Neural network scheduler trained on channel gain data.
+- Baseline Round-Robin scheduler for benchmarking.
+- Rayleigh fading model for simulating realistic 6G conditions.
+- Evaluation metrics: throughput, energy consumption, throughput gain, and variance.
+- Visual comparison of scheduler performance over time.
 
-## Tech Stack
+## Technologies
 
-- **MATLAB**: Core environment for simulation, neural network training, and visualization.
-- **MATLAB Neural Network Toolbox**: Used for training the scheduler.
-- **MATLAB Plotting Functions**: Generates throughput and energy comparison plots.
+- MATLAB R2020a or later
+- MATLAB Neural Network Toolbox
+- MATLAB plotting tools
 
-## Project Structure
+## File Structure
 
-```plaintext
+```
 6g-ai-scheduler/
-├── main.m             # Main script for simulation and scheduler evaluation
-├── simulate_channel.m # Simulates Rayleigh fading channels
-├── round_robin_scheduler.m # Round-Robin scheduling implementation
-├── evaluate_schedulers.m   # Neural network scheduler evaluation
-├── visualize_results.m     # Visualizes throughput and energy metrics
-├── figures/               # Directory for output plots
-├── README.md              # Project documentation
+├── main.m                  # Entry point for simulation and evaluation
+├── simulate_channel.m      # Rayleigh channel generator
+├── round_robin_scheduler.m # Traditional Round-Robin scheduling
+├── evaluate_schedulers.m   # Applies both schedulers and collects metrics
+├── visualize_results.m     # Plot generation
+├── figures/                # Output plots (e.g., throughput-comparison.png)
+├── README.md
 ```
 
-## Setup and Installation
+## Setup Instructions
 
 ### Prerequisites
 
-- **MATLAB R2020a or later**: Required for Neural Network Toolbox compatibility.
-- **MATLAB Neural Network Toolbox**: For training the neural scheduler.
-- **Git**: For cloning the repository.
+- MATLAB R2020a or later
+- Neural Network Toolbox
 
-### Steps
+### Installation
 
-1. **Clone the Repository**
+```bash
+git clone https://github.com/your-username/6g-scheduler.git
+cd 6g-scheduler
+```
 
-   ```bash
-   git clone https://github.com/your-username/6g-scheduler.git
-   cd 6g-scheduler
-   ```
+### Running the Simulation
 
-2. **Set Up MATLAB**
+1. Open MATLAB.
+2. Navigate to the project directory.
+3. Run:
 
-   - Ensure MATLAB is installed with the Neural Network Toolbox.
-   - Open MATLAB and navigate to the `6g-scheduler` directory.
+```matlab
+main
+```
 
-### Running the Application
+This will:
 
-1. **Run the Main Script**
+- Simulate Rayleigh fading channels
+- Train the neural network scheduler
+- Evaluate and compare both schedulers
+- Generate plots in the `figures/` directory
 
-   In MATLAB, run:
+## Methodology
 
-   ```matlab
-   main
-   ```
+### Channel Simulation
 
-   This executes the simulation, trains the neural network, evaluates both schedulers, and generates visualizations.
+Rayleigh fading is used to model wireless multipath effects. The simulation generates a matrix of channel gains with:
 
-2. **Output**
+- `numUsers = 10`
+- `numTimeSlots = 100`
 
-   - **Console Output**: Displays throughput gain, average throughput (Gbps), and throughput variance (Mbps²) for both schedulers.
-   - **Plots**: Saves throughput and energy comparison plots to `figures/throughput-comparison.png`.
+### Neural Scheduler Training
 
-## How It Works
+The network is trained using 1000 synthetic channel gain vectors to predict which user should be scheduled based on instantaneous channel conditions.
 
-1. **Channel Simulation**:
+### Scheduler Comparison
 
-   - Generates Rayleigh fading channel gains for `numUsers` users across `numTimeSlots` using a random seed for reproducibility [3].
-   - Parameters: `numUsers = 10`, `numTimeSlots = 100`.
+- **Round-Robin**: Fixed user order, no awareness of channel state.
+- **Neural Network**: Selects users based on predicted scores from trained model.
 
-2. **Neural Network Training**:
+### Evaluation Metrics
 
-   - Trains a neural network with `numTrainingSamples = 1000` to predict optimal user scheduling based on channel gains.
+- **Throughput (Gbps)**: Computed using Shannon capacity: `BW * log2(1 + SNR)`
+- **Energy Consumption**: Fixed power model (0.1 W per transmission)
+- **Throughput Gain**: Improvement of NN scheduler over RR baseline
+- **Variance**: Measures stability of achieved throughput
 
-3. **Scheduling**:
+## Results
 
-   - **Round-Robin Scheduler**: Assigns time slots cyclically to users, ignoring channel conditions.
-   - **Neural Network Scheduler**: Selects users based on predicted scores from channel gains, maximizing throughput.
+Example output:
 
-4. **Performance Evaluation**:
+- **NN Throughput**: 1.82 Gbps
+- **RR Throughput**: 1.45 Gbps
+- **Throughput Gain**: 25.43%
+- **Energy**: Equal for both (constant power)
 
-   - Computes throughput using Shannon's capacity formula: `bandwidth * log2(1 + SNR)` [2].
-   - Calculates energy consumption (fixed at `txPower = 0.1 W`).
-   - Reports throughput gain, average throughput, and variance.
+Visualizations saved in:
 
-5. **Visualization**:
+- `figures/throughput-comparison.png`
 
-   - Plots throughput (Mbps) and energy (mW) over time slots for both schedulers.
+## Future Work
 
-## Testing
-
-Tests validate scheduler performance under simulated 6G network conditions. Key test cases include:
-
-1. **Channel Simulation**:
-
-   - Verify Rayleigh fading channel gains are non-negative and follow expected statistical properties.
-   - **Output**: `channelGains` matrix (`numUsers x numTimeSlots`).
-
-2. **Scheduler Comparison**:
-
-   - Run `main.m` to compare Round-Robin and neural network schedulers.
-   - **Screenshot**: Throughput and energy plots.
-     ![Throughput and Energy Comparison](figures/throughput-comparison.png)
-
-3. **Performance Metrics**:
-
-   - Check console output for throughput gain, average throughput, and variance.
-   - Example: `Throughput Gain: 25.43%`, `NN Avg Throughput: 1.82 Gbps`, `RR Avg Throughput: 1.45 Gbps`.
-
-## Usage
-
-- Run `main.m` in MATLAB to execute the full simulation.
-- View console output for performance metrics.
-- Check `figures/throughput-comparison.png` for visualized results.
-
-## Future Improvements
-
-- **Advanced Neural Architectures**: Explore deep learning models like LSTM for temporal channel dependencies [4].
-- **Dynamic Power Allocation**: Incorporate variable transmit power for energy optimization.
-- **Real-World Channel Models**: Integrate 6G-specific channel models (e.g., mmWave, terahertz) [1].
-- **Scalability**: Increase `numUsers` and `numTimeSlots` for large-scale simulations.
-- **Real-Time Evaluation**: Adapt for real-time 6G network testing.
+- Replace neural network with LSTM to model time correlations in channel states.
+- Implement adaptive power control to reduce energy usage.
+- Extend simulation to mmWave and terahertz bands for 6G realism.
+- Increase scalability to hundreds of users for macro simulations.
 
 ## References
 
-[1] Z. Zhang et al., “6G wireless networks: Vision, requirements, architecture, and key technologies,” _IEEE Veh. Technol. Mag._, vol. 14, no. 3, pp. 28–41, Sep. 2019, doi: 10.1109/MVT.2019.2921397.
+[1] Z. Zhang et al., “6G wireless networks: Vision, requirements, architecture, and key technologies,” IEEE Veh. Technol. Mag., vol. 14, no. 3, 2019.
 
-[2] T. M. Cover and J. A. Thomas, _Elements of Information Theory_, 2nd ed. Hoboken, NJ: Wiley, 2006.
+[2] T. Cover, J. Thomas, _Elements of Information Theory_, 2nd ed., Wiley, 2006.
 
-[3] G. L. Stuber, _Principles of Mobile Communication_, 4th ed. Springer, 2017.
+[3] G. L. Stuber, _Principles of Mobile Communication_, 4th ed., Springer, 2017.
 
-[4] H. Yang et al., “Deep learning-based resource allocation for 6G wireless networks,” _IEEE Netw._, vol. 34, no. 5, pp. 186–193, Sep./Oct. 2020, doi: 10.1109/MNET.011.2000132.
+[4] H. Yang et al., “Deep learning-based resource allocation for 6G,” IEEE Netw., vol. 34, no. 5, 2020.
+
+## License
+
+This project is licensed under the MIT License.
