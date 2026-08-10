@@ -1,5 +1,12 @@
 % Neural Network-Based Scheduling for 6G Multi-User Network
 
+% Add src/ to the path relative to this file's own location, not the
+% current working directory -- so this runs correctly regardless of where
+% MATLAB's cwd happens to be, not just when launched from the project root.
+addpath(fullfile(fileparts(mfilename('fullpath')), 'src'));
+
+rng(42); % Set once here (not inside individual functions) so the whole run is reproducible
+
 % Parameters
 numUsers = 10;
 numTimeSlots = 100;

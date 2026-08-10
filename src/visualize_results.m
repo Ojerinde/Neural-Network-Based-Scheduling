@@ -7,6 +7,10 @@ function visualize_results(rrThroughput, nnThroughput, rrEnergy, nnEnergy, numTi
     %   nnEnergy - Neural network energy (Watts)
     %   numTimeSlots - Number of time slots
     
+    if ~exist('figures', 'dir')
+        mkdir('figures');
+    end
+
     figure;
     subplot(2,1,1);
     plot(1:numTimeSlots, rrThroughput/1e6, 'b-', 'DisplayName', 'Round-Robin');
